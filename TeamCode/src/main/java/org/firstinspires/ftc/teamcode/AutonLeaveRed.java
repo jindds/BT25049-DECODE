@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="AutonLeaveRed", group=("comp"))
 public class AutonLeaveRed extends LinearOpMode {
 
-    public static ScrimTeleop.Configuration Params = new ScrimTeleop.Configuration();
+    public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 
     @Override
     public void runOpMode() throws InterruptedException {

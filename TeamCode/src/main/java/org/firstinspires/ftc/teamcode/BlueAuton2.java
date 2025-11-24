@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name="BT-25049-BlueAutonomous-low", group="comp-low-battery")
 public class BlueAuton2 extends LinearOpMode{
 
-    public static ScrimTeleop.Configuration Params = new ScrimTeleop.Configuration();
+    public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 
     public static class intake {
         private DcMotorEx intake;

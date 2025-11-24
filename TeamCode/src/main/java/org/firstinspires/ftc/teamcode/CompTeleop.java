@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp(name="BT-25049-Teleop", group="scrim")
-public class ScrimTeleop extends OpMode {
+@TeleOp(name="BT-25049-Teleop", group="comp")
+public class CompTeleop extends OpMode {
     public static class Configuration {
         public double MAX_DRIVE_SPEED = 1.0;
         public double ARM_RANGE = 0.6;
@@ -20,7 +20,7 @@ public class ScrimTeleop extends OpMode {
         public double FLYWHEEL_SPEED = 0.8;
         public double startPosArm = 1.0;
     }
-    public static ScrimTeleop.Configuration Params = new ScrimTeleop.Configuration();
+    public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 
     public DcMotorEx frontLeft, frontRight, backLeft, backRight;
     public DcMotorEx intake, flywheel;
