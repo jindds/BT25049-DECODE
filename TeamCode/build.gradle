@@ -1,0 +1,72 @@
+//
+// build.gradle in TeamCode
+//
+// Most of the definitions for building your module reside in a common, shared
+// file 'build.common.gradle'. Being factored in this way makes it easier to
+// integrate updates to the FTC into your code. If you really need to customize
+// the build definitions, you can place those customizations in this file, but
+// please think carefully as to whether such customizations are really necessary
+// before doing so.
+
+
+// Custom definitions may go here
+
+// Include common definitions from above.
+apply from: '../build.common.gradle'
+apply from: '../build.dependencies.gradle'
+
+android {
+    namespace = 'org.firstinspires.ftc.teamcode'
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging true
+    }
+}
+
+repositories {
+    maven {
+        url = 'https://maven.brott.dev/'
+    }
+
+    maven {
+        url = 'https://maven.pedropathing.com'
+    }
+    maven {
+        url = 'https://mymaven.bylazar.com/releases'
+    }
+
+    maven {
+        url "https://repo.dairy.foundation/releases"
+    }
+
+    // Fpr Snapshot/Beta Versions of SolversLib
+    maven {
+        url "https://repo.dairy.foundation/snapshots"
+    }
+
+}
+
+dependencies {
+    implementation project(':FtcRobotController')
+    annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
+
+    // SolversLib: Latest Stable Version
+    implementation "org.solverslib:core:0.3.3" // core
+      implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
+
+    // SolversLib: Latest Beta Version
+//    implementation "org.solverslib:core:SNAPSHOT-5a81a6b" // core
+//    implementation "org.solverslib:pedroPathing:SNAPSHOT-5a81a6b" // pedroPathing
+
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.25"
+    implementation "com.acmerobotics.roadrunner:core:1.0.1"
+    implementation "com.acmerobotics.roadrunner:actions:1.0.1"
+    implementation "com.acmerobotics.dashboard:dashboard:0.4.17" // FTC Dashboard
+
+    // Pedro Pathing
+    implementation 'com.pedropathing:ftc:2.0.3'
+    implementation 'com.pedropathing:telemetry:1.0.0'
+
+    // Panels Dashboard
+    implementation "com.bylazar:fullpanels:1.0.5"
+}
