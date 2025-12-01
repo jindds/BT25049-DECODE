@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -7,8 +7,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="AutonLeaveBlue", group=("comp"))
-public class AutonLeaveBlue extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
+@Autonomous(name="BlueAutoLeave", group=("comp"))
+public class BlueAutoLeave extends LinearOpMode {
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 

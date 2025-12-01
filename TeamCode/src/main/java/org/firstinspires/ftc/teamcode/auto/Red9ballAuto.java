@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import androidx.annotation.NonNull;
 
@@ -13,8 +13,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="BT-25049-RedAutonomous-low", group="comp-low-battery")
-public class RedAuton2 extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
+@Autonomous(name="BT-25049-RedAutonomous", group="comp")
+public class Red9ballAuto extends LinearOpMode {
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 
