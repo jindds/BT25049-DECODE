@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 @Config
 @TeleOp(name="BT-25049-Teleop", group="comp")
@@ -27,6 +28,15 @@ public class CompTeleop extends OpMode {
     public Servo arm, hood1, hood2;
     public IMU imu;
     private boolean leftBumperState, rightBumperState, intakeRunningForward, intakeRunningReverse, bButtonState, flywheelRunning;
+    public static class PIDFConfiguration {
+        public double kP = 10.0;
+        public double kI = 0.0;
+        public double kD = 0.0;
+        public double kF = 15.4;
+        public double TARGET_RPM = 3000;
+        public double TICKS_PER_REV = 28;
+    }
+    public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
 
     @Override
     public void init() {
