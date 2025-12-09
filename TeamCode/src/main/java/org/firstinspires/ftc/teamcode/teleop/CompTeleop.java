@@ -29,11 +29,11 @@ public class CompTeleop extends OpMode {
     public IMU imu;
     private boolean leftBumperState, rightBumperState, intakeRunningForward, intakeRunningReverse, bButtonState, flywheelRunning;
     public static class PIDFConfiguration {
-        public double kP = 10.0;
+        public double kP = 70.0;
         public double kI = 0.0;
-        public double kD = 0.0;
+        public double kD = 20.0;;
         public double kF = 15.4;
-        public double TARGET_RPM = 3000;
+        public double TARGET_RPM = 4000;
         public double TICKS_PER_REV = 28;
     }
     public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
@@ -55,6 +55,11 @@ public class CompTeleop extends OpMode {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        flywheel.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
 
         // servo
         arm = hardwareMap.get(Servo.class, "arm");
@@ -106,8 +111,13 @@ public class CompTeleop extends OpMode {
 
         bButtonState = gamepad1.b;
 
+        flywheel.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+
+        double targetTickPerSec =
+                (PIDFParams.TARGET_RPM * PIDFParams.TICKS_PER_REV) / 60.0;
+
         if (flywheelRunning) {
-            flywheel.setPower(Params.FLYWHEEL_SPEED);
+            flywheel.setVelocity(targetTickPerSec);
         } else {
             flywheel.setPower(0.0);
         }

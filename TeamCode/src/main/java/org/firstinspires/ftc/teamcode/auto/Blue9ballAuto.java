@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 public class Blue9ballAuto extends LinearOpMode{
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
+    public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
 
     public static class intake {
         private DcMotorEx intake;
@@ -73,12 +74,19 @@ public class Blue9ballAuto extends LinearOpMode{
             flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
             flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             flywheel.setDirection(DcMotorEx.Direction.REVERSE);
+            flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+            flywheel.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
         }
 
         public class Fly implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                flywheel.setPower(Params.FLYWHEEL_SPEED);
+                double targetTickPerSec =
+                        (PIDFParams.TARGET_RPM * PIDFParams.TICKS_PER_REV) / 60.0;
+
+                flywheel.setVelocity(targetTickPerSec);
                 return false;
             }
         }
