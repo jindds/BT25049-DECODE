@@ -13,14 +13,22 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 
-@Autonomous(name="BT-25049-RedAutonomous", group="comp")
-public class Red9ballAuto extends LinearOpMode {
+@Autonomous(name="RedFar3Auto", group=("comp"))
+public class RedFar3Auto extends LinearOpMode {
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
-    public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
+    public static class PIDFConfiguration {
+        public double kP = 200.0;
+        public double kI = 0.0;
+        public double kD = 0.0;;
+        public double kF = 15.4;
+        public double TARGET_RPM = 5000;
+        public double TICKS_PER_REV = 28;
+    }
+    public static RedFar3Auto.PIDFConfiguration PIDFParams = new RedFar3Auto.PIDFConfiguration();
 
     public static class intake {
         private DcMotorEx intake;
@@ -136,83 +144,83 @@ public class Red9ballAuto extends LinearOpMode {
         }
 
     }
+    public static class hood {
+        private Servo hood;
 
-        @Override
-        public void runOpMode() throws InterruptedException {
-            flywheel flywheel = new flywheel(hardwareMap);
-            intake intake = new intake(hardwareMap);
-            arm arm = new arm(hardwareMap);
+        public hood(HardwareMap hardwareMap) {
+            hood = hardwareMap.get(Servo.class, "hood2");
+        }
 
-            Pose2d startPose = new Pose2d(-51, 48, Math.toRadians(135));
-            Pose2d scorePose = new Pose2d(-25, 22, Math.toRadians(135));
-            Pose2d firstLinePose = new Pose2d(-9, 21, Math.toRadians(90));
-            Pose2d secondLinePose = new Pose2d(15, 24, Math.toRadians(90));
-            Pose2d endPose = new Pose2d(0, 50, Math.toRadians(270));
+        public class Up implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                hood.setPosition((Params.HOOD_SPEED/ 180.0));
+                return false;
+            }
+        }
 
-            MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
-
-            Action trajectoryAction = drive.actionBuilder(startPose)
-                    .stopAndAdd(flywheel.fly())
-                    .strafeToLinearHeading(scorePose.position, scorePose.heading)
-                    .stopAndAdd(intake.spin())
-                    // ball 1
-                    .stopAndAdd(arm.extend())
-                    .afterTime(0.1, arm.retract())
-                    // ball 2
-                    .afterTime(0.6, arm.extend())
-                    .afterTime(0.7, arm.retract())
-                    // ball 3
-                    .afterTime(1.2, arm.extend())
-                    .afterTime(1.3, arm.retract())
-                    .waitSeconds(1.5)
-                    .stopAndAdd(flywheel.stop())
-                    // SPIKE I
-                    .splineToLinearHeading(new Pose2d(firstLinePose.position, firstLinePose.heading), firstLinePose.heading)
-                    .lineToY(55)
-                    .stopAndAdd(flywheel.fly())
-                    .afterTime(0.5, intake.pause())
-                    .splineToLinearHeading(new Pose2d(scorePose.position, scorePose.heading), scorePose.heading)
-                    .stopAndAdd(intake.spin())
-                    // ball 1
-                    .stopAndAdd(arm.extend())
-                    .afterTime(0.1, arm.retract())
-                    // ball 2
-                    .afterTime(0.6, arm.extend())
-                    .afterTime(0.7, arm.retract())
-                    // ball 3
-                    .afterTime(1.2, arm.extend())
-                    .afterTime(1.3, arm.retract())
-                    .waitSeconds(1.5)
-                    .stopAndAdd(flywheel.stop())
-                    // SPIKE II
-                    .splineToLinearHeading(new Pose2d(secondLinePose.position, secondLinePose.heading), secondLinePose.heading)
-                    .lineToY(70)
-                    .lineToY(40)
-                    .stopAndAdd(intake.pause())
-                    .stopAndAdd(flywheel.fly())
-                    .splineToLinearHeading(new Pose2d(scorePose.position, scorePose.heading), scorePose.heading)
-                    .stopAndAdd(intake.spin())
-                    // ball 1
-                    .stopAndAdd(arm.extend())
-                    .afterTime(0.1, arm.retract())
-                    // ball 2
-                    .afterTime(0.6, arm.extend())
-                    .afterTime(0.7, arm.retract())
-                    // ball 3
-                    .afterTime(1.2, arm.extend())
-                    .afterTime(1.3, arm.retract())
-                    .waitSeconds(1.5)
-                    .stopAndAdd(flywheel.stop())
-                    .stopAndAdd(intake.pause())
-                    .strafeToLinearHeading(endPose.position, endPose.heading)
-                    .build();
-
-            waitForStart();
-
-            if(isStopRequested()) return;
-
-            Actions.runBlocking(trajectoryAction);
-
+        public Action up() {
+            return new Up();
+        }
+        public class Down implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                hood.setPosition(-(Params.HOOD_SPEED / 180.0));
+                return false;
+            }
+        }
+        public Action down() {
+            return new Down();
         }
 
     }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        flywheel flywheel = new flywheel(hardwareMap);
+        intake intake = new intake(hardwareMap);
+        arm arm = new arm(hardwareMap);
+        hood hood = new hood(hardwareMap);
+
+        Pose2d startPose = new Pose2d(61.2, 12.3, Math.toRadians(180));
+        Pose2d scorePose = new Pose2d(48, 8, Math.toRadians(160));
+        Pose2d thirdLinePose = new Pose2d(32, 23, Math.toRadians(90));
+        Pose2d endPose = new Pose2d(45, 35, Math.toRadians(160));
+
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
+
+        Action trajectoryAction = drive.actionBuilder(startPose)
+                .stopAndAdd(hood.up())
+                .stopAndAdd(flywheel.fly())
+                .strafeToLinearHeading(scorePose.position, scorePose.heading)
+                .waitSeconds(1.5)
+                .stopAndAdd(intake.spin())
+                // ball 1
+                .stopAndAdd(arm.extend())
+                .afterTime(0.1, arm.retract())
+                // ball 2
+                .afterTime(1.0, intake.pause())
+                .afterTime(1.6, arm.extend())
+                .afterTime(1.7, arm.retract())
+                .afterTime(1.7, intake.spin())
+                // ball 3
+                .afterTime(3.0, intake.pause())
+                .afterTime(3.2, arm.extend())
+                .afterTime(3.3, arm.retract())
+                .waitSeconds(3.5)
+                .stopAndAdd(flywheel.stop())
+                .stopAndAdd(hood.down())
+                .strafeToLinearHeading(endPose.position, endPose.heading)
+                .build();
+
+        waitForStart();
+
+        if(isStopRequested()) return;
+
+        Actions.runBlocking(trajectoryAction);
+
+
+
+
+    }
+}

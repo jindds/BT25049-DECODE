@@ -8,17 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.seattlesolvers.solverslib.controller.PIDFController;
 
 @Config
 @TeleOp(name="BT-25049-Teleop", group="comp")
 public class CompTeleop extends OpMode {
     public static class Configuration {
         public double MAX_DRIVE_SPEED = 1.0;
-        public double ARM_RANGE = 0.6;
+        public double ARM_RANGE = 0.75;
         public double INTAKE_SPEED = 0.85;
         public double HOOD_SPEED = 100.0;
-        public double FLYWHEEL_SPEED = 0.8;
         public double startPosArm = 1.0;
     }
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
@@ -33,7 +31,7 @@ public class CompTeleop extends OpMode {
         public double kI = 0.0;
         public double kD = 20.0;;
         public double kF = 15.4;
-        public double TARGET_RPM = 4000;
+        public double TARGET_RPM = 3800;
         public double TICKS_PER_REV = 28;
     }
     public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();

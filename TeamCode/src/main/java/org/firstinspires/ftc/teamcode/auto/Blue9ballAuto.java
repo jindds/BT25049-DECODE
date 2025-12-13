@@ -145,75 +145,67 @@ public class Blue9ballAuto extends LinearOpMode{
         arm arm = new arm(hardwareMap);
 
         Pose2d startPose = new Pose2d(-51,-48, Math.toRadians(230));
-        Pose2d scorePose = new Pose2d(-25, -20,Math.toRadians(230));
-        Pose2d firstLinePose = new Pose2d(-12, -21, Math.toRadians(270));
-        Pose2d secondLinePose = new Pose2d(12, -24, Math.toRadians(270));
+        Pose2d scorePose = new Pose2d(-25, -22, Math.toRadians(230));
+        Pose2d firstLinePose = new Pose2d(-9, -21, Math.toRadians(270));
+        Pose2d secondLinePose = new Pose2d(15, -24, Math.toRadians(270));
+        Pose2d endPose = new Pose2d(0, -50, Math.toRadians(90));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
         Action trajectoryAction = drive.actionBuilder(startPose)
                 .stopAndAdd(flywheel.fly())
                 .strafeToLinearHeading(scorePose.position, scorePose.heading)
+                .stopAndAdd(intake.spin())
                 // ball 1
                 .stopAndAdd(arm.extend())
                 .afterTime(0.1, arm.retract())
                 // ball 2
-                .stopAndAdd(intake.spin())
-                .afterTime(1.1, intake.pause())
-                .afterTime(1.2, arm.extend())
-                .afterTime(2.0, arm.retract())
+                .afterTime(0.6, arm.extend())
+                .afterTime(0.7, arm.retract())
                 // ball 3
-                .afterTime(2.1, intake.spin())
-                .afterTime(3.1, intake.pause())
-                .afterTime(3.2, arm.extend())
-                .afterTime(4.0, arm.retract())
-                .waitSeconds(4)
+                .afterTime(1.2, arm.extend())
+                .afterTime(1.3, arm.retract())
+                .waitSeconds(1.5)
                 .stopAndAdd(flywheel.stop())
-                .stopAndAdd(intake.spin())
                 // SPIKE I
                 .splineToLinearHeading(new Pose2d(firstLinePose.position, firstLinePose.heading), firstLinePose.heading)
                 .lineToY(-55)
-                .stopAndAdd(intake.pause())
                 .stopAndAdd(flywheel.fly())
+                .afterTime(0.5, intake.pause())
                 .splineToLinearHeading(new Pose2d(scorePose.position, scorePose.heading), scorePose.heading)
+                .stopAndAdd(intake.spin())
                 // ball 1
                 .stopAndAdd(arm.extend())
                 .afterTime(0.1, arm.retract())
                 // ball 2
-                .stopAndAdd(intake.spin())
-                .afterTime(1.1, intake.pause())
-                .afterTime(1.2, arm.extend())
-                .afterTime(2.0, arm.retract())
+                .afterTime(0.6, arm.extend())
+                .afterTime(0.7, arm.retract())
                 // ball 3
-                .afterTime(2.1, intake.spin())
-                .afterTime(3.1, intake.pause())
-                .afterTime(3.2, arm.extend())
-                .afterTime(4.0, arm.retract())
-                .waitSeconds(4)
+                .afterTime(1.2, arm.extend())
+                .afterTime(1.3, arm.retract())
+                .waitSeconds(1.5)
                 .stopAndAdd(flywheel.stop())
-                .stopAndAdd(intake.spin())
                 // SPIKE II
                 .splineToLinearHeading(new Pose2d(secondLinePose.position, secondLinePose.heading), secondLinePose.heading)
-                .lineToY(-55)
+                .lineToY(-70)
                 .lineToY(-40)
                 .stopAndAdd(intake.pause())
                 .stopAndAdd(flywheel.fly())
                 .splineToLinearHeading(new Pose2d(scorePose.position, scorePose.heading), scorePose.heading)
+                .stopAndAdd(intake.spin())
                 // ball 1
                 .stopAndAdd(arm.extend())
                 .afterTime(0.1, arm.retract())
                 // ball 2
-                .stopAndAdd(intake.spin())
-                .afterTime(1.1, intake.pause())
-                .afterTime(1.2, arm.extend())
-                .afterTime(2.0, arm.retract())
+                .afterTime(0.6, arm.extend())
+                .afterTime(0.7, arm.retract())
                 // ball 3
-                .afterTime(2.1, intake.spin())
-                .afterTime(3.1, intake.pause())
-                .afterTime(3.2, arm.extend())
-                .afterTime(4.0, arm.retract())
-                .waitSeconds(4)
+                .afterTime(1.2, arm.extend())
+                .afterTime(1.3, arm.retract())
+                .waitSeconds(1.5)
                 .stopAndAdd(flywheel.stop())
+                .stopAndAdd(intake.pause())
+                .strafeToLinearHeading(endPose.position, endPose.heading)
                 .build();
 
         waitForStart();
