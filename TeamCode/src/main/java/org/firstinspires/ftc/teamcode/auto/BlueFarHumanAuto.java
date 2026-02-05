@@ -16,8 +16,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 
-@Autonomous(name="RedFar3Auto", group=("comp"))
-public class RedFar3Auto extends LinearOpMode {
+@Autonomous(name="BlueFarHumanAuto", group=("comp"))
+public class BlueFarHumanAuto extends LinearOpMode {
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
     public static class PIDFConfiguration {
@@ -28,7 +28,7 @@ public class RedFar3Auto extends LinearOpMode {
         public double TARGET_RPM = 5000;
         public double TICKS_PER_REV = 28;
     }
-    public static RedFar3Auto.PIDFConfiguration PIDFParams = new RedFar3Auto.PIDFConfiguration();
+    public static BlueFarHumanAuto.PIDFConfiguration PIDFParams = new BlueFarHumanAuto.PIDFConfiguration();
 
     public static class intake {
         private DcMotorEx intake;
@@ -182,10 +182,10 @@ public class RedFar3Auto extends LinearOpMode {
         arm arm = new arm(hardwareMap);
         hood hood = new hood(hardwareMap);
 
-        Pose2d startPose = new Pose2d(61.2, 12.3, Math.toRadians(180));
-        Pose2d scorePose = new Pose2d(48, 8, Math.toRadians(160));
-        Pose2d thirdLinePose = new Pose2d(32, 23, Math.toRadians(90));
-        Pose2d endPose = new Pose2d(45, 35, Math.toRadians(160));
+        Pose2d startPose = new Pose2d(61.2, -12.3, Math.toRadians(180));
+        Pose2d scorePose = new Pose2d(45, -12.3, Math.toRadians(200));
+        Pose2d readyPose = new Pose2d(61.2, -30, Math.toRadians(270));
+        Pose2d endPose = new Pose2d(45, -35, Math.toRadians(200));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
@@ -209,8 +209,30 @@ public class RedFar3Auto extends LinearOpMode {
                 .afterTime(3.3, arm.retract())
                 .waitSeconds(3.5)
                 .stopAndAdd(flywheel.stop())
-                .stopAndAdd(hood.down())
-                .strafeToLinearHeading(endPose.position, endPose.heading)
+                // ready for human player zone
+                .splineToLinearHeading(new Pose2d(readyPose.position, readyPose.heading), readyPose.heading)
+                .stopAndAdd(intake.spin())
+                .lineToY(-70)
+                .lineToY(-40)
+                .stopAndAdd(intake.pause())
+                .stopAndAdd(flywheel.fly())
+                .strafeToLinearHeading(scorePose.position, Math.toRadians(207.5))
+                .stopAndAdd(intake.spin())
+                // ball 1
+                .stopAndAdd(arm.extend())
+                .afterTime(0.1, arm.retract())
+                // ball 2
+                .afterTime(1.0, intake.pause())
+                .afterTime(1.6, arm.extend())
+                .afterTime(1.7, arm.retract())
+                .afterTime(1.7, intake.spin())
+                // ball 3
+                .afterTime(3.0, intake.pause())
+                .afterTime(3.2, arm.extend())
+                .afterTime(3.3, arm.retract())
+                .waitSeconds(3.5)
+                .stopAndAdd(flywheel.stop())
+                .stopAndAdd(intake.pause())
                 .build();
 
         waitForStart();

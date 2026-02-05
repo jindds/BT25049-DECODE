@@ -16,25 +16,31 @@ import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 @TeleOp(name = "Flywheel TEST")
 public class testFlywheel extends OpMode {
 
-        public static double kP = 70.0;
+        public static double kP = 200.0;
         public static double kI = 0.0;
-        public static double kD = 20.0;
+        public static double kD = 0.0;
         public static double kF = 15.4;
-        public static double TARGET_RPM = 3000;
+        public static double TARGET_RPM = 6000;
         public static double TICKS_PER_REV = 28;
         private boolean flywheelOn;
 
     private DcMotorEx flywheel;
+    private DcMotorEx flywheel2;
 
     @Override
     public void init() {
+        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         flywheel.setVelocityPIDFCoefficients(kP, kI, kD, kF);
+        flywheel2.setVelocityPIDFCoefficients(kP, kI, kD, kF);
+
         flywheelOn = false;
 
     }
@@ -43,6 +49,7 @@ public class testFlywheel extends OpMode {
     public void loop() {
 
         flywheel.setVelocityPIDFCoefficients(kP, kI, kD, kF);
+        flywheel2.setVelocityPIDFCoefficients(kP, kI, kD, kF);
 
         double targetTickPerSec =
                 (TARGET_RPM * TICKS_PER_REV) / 60.0;
@@ -53,8 +60,10 @@ public class testFlywheel extends OpMode {
 
         if (flywheelOn) {
             flywheel.setVelocity(targetTickPerSec);
+            flywheel2.setVelocity(targetTickPerSec);
         } else {
             flywheel.setPower(0);
+            flywheel2.setPower(0);
         }
 
         double currentRPM =

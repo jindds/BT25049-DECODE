@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -14,11 +13,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 
-@Autonomous(name="RedFar6Auto", group=("comp"))
-public class RedFar6Auto extends LinearOpMode {
+@Autonomous(name="RedFarHumanAuto", group=("comp"))
+public class RedFarHumanAuto extends LinearOpMode {
 
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
     public static class PIDFConfiguration {
@@ -29,7 +28,7 @@ public class RedFar6Auto extends LinearOpMode {
         public double TARGET_RPM = 5000;
         public double TICKS_PER_REV = 28;
     }
-    public static RedFar6Auto.PIDFConfiguration PIDFParams = new RedFar6Auto.PIDFConfiguration();
+    public static RedFarHumanAuto.PIDFConfiguration PIDFParams = new RedFarHumanAuto.PIDFConfiguration();
 
     public static class intake {
         private DcMotorEx intake;
@@ -185,7 +184,7 @@ public class RedFar6Auto extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(61.2, 12.3, Math.toRadians(180));
         Pose2d scorePose = new Pose2d(48, 8, Math.toRadians(160));
-        Pose2d thirdLinePose = new Pose2d(32, 23, Math.toRadians(90));
+        Pose2d readyPose = new Pose2d(61.2, 30, Math.toRadians(90));
         Pose2d endPose = new Pose2d(45, 35, Math.toRadians(160));
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
@@ -210,9 +209,9 @@ public class RedFar6Auto extends LinearOpMode {
                 .afterTime(3.3, arm.retract())
                 .waitSeconds(3.5)
                 .stopAndAdd(flywheel.stop())
+                .waitSeconds(5.0)
+                .splineToLinearHeading(new Pose2d(readyPose.position, readyPose.heading), readyPose.heading)
                 .stopAndAdd(intake.spin())
-                // SPIKE III
-                .splineToLinearHeading(new Pose2d(thirdLinePose.position, thirdLinePose.heading), thirdLinePose.heading)
                 .lineToY(70)
                 .lineToY(40)
                 .stopAndAdd(intake.pause())
@@ -233,8 +232,8 @@ public class RedFar6Auto extends LinearOpMode {
                 .afterTime(3.3, arm.retract())
                 .waitSeconds(3.5)
                 .stopAndAdd(flywheel.stop())
+                .stopAndAdd(intake.pause())
                 .stopAndAdd(hood.down())
-                .strafeToLinearHeading(endPose.position, endPose.heading)
                 .build();
 
         waitForStart();

@@ -14,15 +14,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class CompTeleop extends OpMode {
     public static class Configuration {
         public double MAX_DRIVE_SPEED = 1.0;
-        public double ARM_RANGE = 0.75;
+        public double ARM_RANGE = 0.5;
         public double INTAKE_SPEED = 0.85;
         public double HOOD_SPEED = 100.0;
-        public double startPosArm = 1.0;
+        public double startPosArm = 0.05;
     }
     public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
 
     public DcMotorEx frontLeft, frontRight, backLeft, backRight;
-    public DcMotorEx intake, flywheel;
+    public DcMotorEx intake, flywheel1, flywheel2;
     public Servo arm, hood1, hood2;
     public IMU imu;
     private boolean leftBumperState, rightBumperState, intakeRunningForward, intakeRunningReverse, bButtonState, flywheelRunning;
@@ -31,7 +31,7 @@ public class CompTeleop extends OpMode {
         public double kI = 0.0;
         public double kD = 20.0;;
         public double kF = 15.4;
-        public double TARGET_RPM = 3800;
+        public double TARGET_RPM = 3900;
         public double TICKS_PER_REV = 28;
     }
     public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
@@ -44,20 +44,24 @@ public class CompTeleop extends OpMode {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheelup");
+       // flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheeldown");
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+       // flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheel1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+       // flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        flywheel.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+        flywheel1.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+       // flywheel2.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
 
         // servo
         arm = hardwareMap.get(Servo.class, "arm");
@@ -109,15 +113,19 @@ public class CompTeleop extends OpMode {
 
         bButtonState = gamepad1.b;
 
-        flywheel.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+        flywheel1.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+        // flywheel2.setVelocityPIDFCoefficients(PIDFParams.kP, PIDFParams.kI, PIDFParams.kD, PIDFParams.kF);
+
 
         double targetTickPerSec =
                 (PIDFParams.TARGET_RPM * PIDFParams.TICKS_PER_REV) / 60.0;
 
         if (flywheelRunning) {
-            flywheel.setVelocity(targetTickPerSec);
+            flywheel1.setVelocity(targetTickPerSec);
+            // flywheel2.setVelocity(targetTickPerSec);
         } else {
-            flywheel.setPower(0.0);
+            flywheel1.setPower(0.0);
+            // flywheel2.setPower(0.0);
         }
 
         // arm servo mode
