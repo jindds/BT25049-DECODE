@@ -15,11 +15,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Transfer;
 
 @Autonomous(name="BlueFarHumanAuto", group=("comp"))
 public class BlueFarHumanAuto extends LinearOpMode {
 
-    public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
+    public static Transfer.Configuration Params = new Transfer.Configuration();
     public static class PIDFConfiguration {
         public double kP = 200.0;
         public double kI = 0.0;

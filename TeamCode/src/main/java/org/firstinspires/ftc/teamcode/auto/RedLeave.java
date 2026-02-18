@@ -15,12 +15,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Shooter;
+import org.firstinspires.ftc.teamcode.teleop.subsystem.Transfer;
 
 @Autonomous(name="BT-25049-RedLeave", group="comp")
 public class RedLeave extends LinearOpMode{
 
-    public static CompTeleop.Configuration Params = new CompTeleop.Configuration();
-    public static CompTeleop.PIDFConfiguration PIDFParams = new CompTeleop.PIDFConfiguration();
+    public static Transfer.Configuration Params = new Transfer.Configuration();
+    public static Shooter.PIDFConfiguration PIDFParams = new Shooter.PIDFConfiguration();
 
     public static class intake {
         private DcMotorEx intake;
