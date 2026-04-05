@@ -16,29 +16,29 @@ import org.firstinspires.ftc.teamcode.teleop.CompTeleop;
 @TeleOp(name = "Flywheel TEST")
 public class testFlywheel extends OpMode {
 
-        public static double kP = 200.0;
-        public static double kI = 0.0;
-        public static double kD = 0.0;
-        public static double kF = 15.4;
-        public static double TARGET_RPM = 6000;
-        public static double TICKS_PER_REV = 28;
-        private boolean flywheelOn;
+    public static double kP = 70.0;
+    public static double kI = 0.0;
+    public static double kD = 20.0;
+    public static double kF = 15.4;
+    public static double TARGET_RPM = 4500;
+    public static double TICKS_PER_REV = 28;
+    private boolean flywheelOn;
 
-    private DcMotorEx flywheel;
+    private DcMotorEx flywheel1;
     private DcMotorEx flywheel2;
 
     @Override
     public void init() {
-        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
-        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheeldown");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheelup");
+        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flywheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         flywheel2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flywheel1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        flywheel.setVelocityPIDFCoefficients(kP, kI, kD, kF);
+        flywheel1.setVelocityPIDFCoefficients(kP, kI, kD, kF);
         flywheel2.setVelocityPIDFCoefficients(kP, kI, kD, kF);
 
         flywheelOn = false;
@@ -48,7 +48,7 @@ public class testFlywheel extends OpMode {
     @Override
     public void loop() {
 
-        flywheel.setVelocityPIDFCoefficients(kP, kI, kD, kF);
+        flywheel1.setVelocityPIDFCoefficients(kP, kI, kD, kF);
         flywheel2.setVelocityPIDFCoefficients(kP, kI, kD, kF);
 
         double targetTickPerSec =
@@ -59,15 +59,15 @@ public class testFlywheel extends OpMode {
         }
 
         if (flywheelOn) {
-            flywheel.setVelocity(targetTickPerSec);
+            flywheel1.setVelocity(targetTickPerSec);
             flywheel2.setVelocity(targetTickPerSec);
         } else {
-            flywheel.setPower(0);
+            flywheel1.setPower(0);
             flywheel2.setPower(0);
         }
 
         double currentRPM =
-                (flywheel.getVelocity() * 60.0) / TICKS_PER_REV;
+                (flywheel1.getVelocity() * 60.0) / TICKS_PER_REV;
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Target RPM", TARGET_RPM);
@@ -78,6 +78,8 @@ public class testFlywheel extends OpMode {
 
         telemetry.addData("Target RPM", TARGET_RPM);
         telemetry.addData("Current RPM", currentRPM);
+        telemetry.addData("Vel1", flywheel1.getVelocity());
+        telemetry.addData("Vel2", flywheel2.getVelocity());
         telemetry.update();
     }
 }

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -28,6 +30,8 @@ public class CompTeleop extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         transfer = new Transfer(hardwareMap);
         shooter = new Shooter(hardwareMap);
+
+        transfer.gateClose();
     }
 
     @Override
@@ -36,7 +40,6 @@ public class CompTeleop extends OpMode {
         drive.pinpoint.update();
         drive.drive(
                 -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, FieldCentric);
-        // TODO: change the control options for both
         if (gamepad1.a && !prevA) {
             FieldCentric = !FieldCentric;
         }
@@ -47,7 +50,7 @@ public class CompTeleop extends OpMode {
         prevA = gamepad1.a;
 
         // INTAKE OR STOP
-        if (gamepad1.left_bumper && !prevLB) {
+        if (gamepad1.right_bumper && !prevRB) {
             if (intakeState == IntakeState.FORWARD) {
                 intakeState = IntakeState.OFF; // turn off when already forward
             } else {
@@ -56,7 +59,7 @@ public class CompTeleop extends OpMode {
         }
 
         // OUTTAKE OR STOP
-        if (gamepad1.right_bumper && !prevRB) {
+        if (gamepad1.left_bumper && !prevLB) {
             if (intakeState == IntakeState.REVERSE) {
                 intakeState = IntakeState.OFF; // turn off when already reverse
             } else {
@@ -81,27 +84,41 @@ public class CompTeleop extends OpMode {
         }
 
         // GATE
-        if (gamepad1.y && !prevY) {
-            gateReady = !gateReady;
-        }
-        prevY = gamepad1.y;
+        //if (gamepad1.y && !prevY) {
+          //  gateReady = !gateReady;
+        //}
+        //prevY = gamepad1.y;
 
-        if (gateReady) {
-            transfer.gateOpen();
-        } else {
-            transfer.gateClose();
-        }
+        //if (gateReady) {
+          //  transfer.gateOpen();
+        //} else {
+          //  transfer.gateClose();
+        //}
 
         // SHOOT
         if (gamepad1.b && !prevB) {
             flywheelReady = !flywheelReady;
+            gateReady = !gateReady;
         }
         prevB = gamepad1.b;
 
         if (flywheelReady) {
             shooter.fire();
+            transfer.gateOpen();
         } else {
             shooter.halt();
+            transfer.gateClose();
         }
+
+        // TELEMETRY
+        telemetry.addData("curVel", shooter.flywheel2.getVelocity());
+        telemetry.addData("TargetVel", Shooter.PIDFParams.targetVelocity);
+        telemetry.addData("CurrentVel", Shooter.PIDFParams.velocity);
+        TelemetryPacket packet = new TelemetryPacket();
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        packet.put("TargetVel", Shooter.PIDFParams.targetVelocity);
+        packet.put("CurrentVel", Shooter.PIDFParams.velocity);
+        packet.put("error", Shooter.PIDFParams.targetVelocity - Shooter.PIDFParams.velocity);
+
     }
 }

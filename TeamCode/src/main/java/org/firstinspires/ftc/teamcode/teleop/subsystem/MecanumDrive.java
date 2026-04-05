@@ -2,30 +2,36 @@ package org.firstinspires.ftc.teamcode.teleop.subsystem;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MecanumDrive {
     public DcMotor frontLeft, frontRight, backLeft, backRight;
     public GoBildaPinpointDriver pinpoint;
 
     public MecanumDrive(HardwareMap hwMap) {
-
         frontLeft = hwMap.get(DcMotor.class, "frontLeft");
         frontRight = hwMap.get(DcMotor.class, "frontRight");
         backLeft = hwMap.get(DcMotor.class, "backLeft");
         backRight = hwMap.get(DcMotor.class, "backRight");
 
-        // TODO: reverse dir of motor
+        // set direction
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // break
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pinpoint = hwMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        // TODO: .setoffsets; set encoder directions
+        // TODO: .set encoder directions
+        pinpoint.setOffsets(-143.149, 66.843, DistanceUnit.MM);
 
         pinpoint.recalibrateIMU();
         pinpoint.resetPosAndIMU();
