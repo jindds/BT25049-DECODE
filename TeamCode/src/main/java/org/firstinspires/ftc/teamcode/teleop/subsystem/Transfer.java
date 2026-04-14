@@ -10,7 +10,7 @@ public class Transfer {
     public Servo gate;
 
     public static class Configuration {
-        public double INTAKE_SPEED = 0.9;
+        public double INTAKE_SPEED = 0.7;
         public double startPosGate = 0.35;
         public double openPosGate = 0;
 

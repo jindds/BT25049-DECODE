@@ -45,13 +45,13 @@ public class Shooter {
         double feedback = error * PIDFParams.kP;
         double feedforward = PIDFParams.kV * PIDFParams.targetVelocity + PIDFParams.kS;
         // bang bang hybrid
-        if (error >= PIDFParams.targetVelocity * 0.1) {
-            flywheel1.setPower(1);
-            flywheel2.setPower(1);
-        } else {
+        // if (error >= PIDFParams.targetVelocity * 0.1) {
+        //    flywheel1.setPower(1);
+        //    flywheel2.setPower(1);
+        // } else {
             flywheel1.setPower(feedback + feedforward);
             flywheel2.setPower(feedback + feedforward);
-        }
+        //}
     }
 
     public void halt() {
