@@ -30,9 +30,9 @@ public class MecanumDrive {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pinpoint = hwMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        // TODO: .set encoder directions
-        pinpoint.setOffsets(-143.149, 66.843, DistanceUnit.MM);
-
+        pinpoint.setOffsets(-5.72294076033464459, 2.485384242741141, DistanceUnit.INCH);
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         pinpoint.recalibrateIMU();
         pinpoint.resetPosAndIMU();
 

@@ -7,9 +7,9 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.telemetryM;
 
+import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
 import com.bylazar.field.Style;
@@ -19,6 +19,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.*;
 import com.pedropathing.math.*;
 import com.pedropathing.paths.*;
+import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.*;
 import static com.pedropathing.math.MathFunctions.quadraticFit;
 
@@ -39,10 +40,9 @@ import java.util.List;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 1.0, 6/26/2025
  */
-
 @Configurable
 @TeleOp(name = "Tuning", group = "Pedro Pathing")
-public class Tuning extends OpMode {
+public class Tuning extends SelectableOpMode {
     public static Follower follower;
 
     @IgnoreConfigurable
@@ -54,20 +54,59 @@ public class Tuning extends OpMode {
     @IgnoreConfigurable
     static ArrayList<String> changes = new ArrayList<>();
 
+    public Tuning() {
+        super("Select a Tuning OpMode", s -> {
+            s.folder("Localization", l -> {
+                l.add("Localization Test", LocalizationTest::new);
+                l.add("Offsets Tuner", OffsetsTuner::new);
+                l.add("Forward Tuner", ForwardTuner::new);
+                l.add("Lateral Tuner", LateralTuner::new);
+                l.add("Turn Tuner", TurnTuner::new);
+            });
+            s.folder("Automatic", a -> {
+                a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
+                a.add("Lateral Velocity Tuner", LateralVelocityTuner::new);
+                a.add("Forward Zero Power Acceleration Tuner", ForwardZeroPowerAccelerationTuner::new);
+                a.add("Lateral Zero Power Acceleration Tuner", LateralZeroPowerAccelerationTuner::new);
+                a.add("Predictive Braking Tuner", PredictiveBrakingTuner::new);
+            });
+            s.folder("Manual", p -> {
+                p.add("Translational Tuner", TranslationalTuner::new);
+                p.add("Heading Tuner", HeadingTuner::new);
+                p.add("Drive Tuner", DriveTuner::new);
+                p.add("Centripetal Tuner", CentripetalTuner::new);
+            });
+            s.folder("Tests", p -> {
+                p.add("Line", Line::new);
+                p.add("Triangle", Triangle::new);
+                p.add("Circle", Circle::new);
+            });
+            s.folder("Swerve", p-> {
+                p.add("Analog Min / Max Tuner", AnalogMinMaxTuner::new);
+                p.add("Swerve Offsets Test", SwerveOffsetsTest::new);
+                p.add("Swerve Turn Test", SwerveTurnTest::new);
+            });
+        });
+    }
+
     @Override
-    public void init() {
-        follower = Constants.createFollower(hardwareMap);
-        PanelsConfigurables.INSTANCE.refreshClass(this);
+    public void onSelect() {
+        if (follower == null) {
+            follower = Constants.createFollower(hardwareMap);
+            PanelsConfigurables.INSTANCE.refreshClass(this);
+        } else {
+            follower = Constants.createFollower(hardwareMap);
+        }
+
         follower.setStartingPose(new Pose());
+
         poseHistory = follower.getPoseHistory();
+
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 
     @Override
-    public void loop() {
-        follower.update();
-        drawCurrent();
-    }
+    public void onLog(List<String> lines) {}
 
     public static void drawCurrent() {
         try {
@@ -83,9 +122,10 @@ public class Tuning extends OpMode {
         drawCurrent();
     }
 
+    /** This creates a full stop of the robot by setting the drive motors to run at 0 power. */
     public static void stopRobot() {
         follower.startTeleopDrive(true);
-        follower.setTeleOpDrive(0, 0, 0, true);
+        follower.setTeleOpDrive(0,0,0,true);
     }
 }
 
@@ -1617,10 +1657,10 @@ class Drawing {
     private static final FieldManager panelsField = PanelsField.INSTANCE.getField();
 
     private static final Style robotLook = new Style(
-            "", "#3F51B5", 0.0
+            "", "#3F51B5", 0.75
     );
     private static final Style historyLook = new Style(
-            "", "#4CAF50", 0.0
+            "", "#4CAF50", 0.75
     );
 
     /**
@@ -1632,7 +1672,7 @@ class Drawing {
 
     /**
      * This draws everything that will be used in the Follower's telemetryDebug() method. This takes
-     * a Follower as an input, so an instance of the DashboardDrawingHandler class is not needed.
+     * a Follower as an input, so an instance of the DashbaordDrawingHandler class is not needed.
      *
      * @param follower Pedro Follower instance.
      */

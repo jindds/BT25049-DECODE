@@ -10,7 +10,7 @@ public class Transfer {
     public Servo gate;
 
     public static class Configuration {
-        public double INTAKE_SPEED = 0.7;
+        public double INTAKE_SPEED = 1.0;
         public double startPosGate = 0.35;
         public double openPosGate = 0;
 
@@ -27,11 +27,11 @@ public class Transfer {
     }
 
     public void startIntake() {
-        intake.setPower(-Params.INTAKE_SPEED);
+        intake.setPower(Params.INTAKE_SPEED);
         highIntake.setPower(-1);
     }
     public void startOuttake() {
-        intake.setPower(Params.INTAKE_SPEED);
+        intake.setPower(-Params.INTAKE_SPEED);
         highIntake.setPower(1);
     }
     public void stopTransfer() {

@@ -17,7 +17,7 @@ public class Shooter {
     public static class PIDFConfiguration {
         public double targetVelocity = 1800;
         public double velocity;
-        public double kP = 0;
+        public double kP = 0.;
         public double kV = 0.000464;
         public double kS = 0.13;
     }
@@ -60,7 +60,7 @@ public class Shooter {
     }
 
     // AUTON ACTIONS
-    public Action spinUp() {
+    /* public Action spinUp() {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -92,5 +92,5 @@ public class Shooter {
                 return false;
             }
         };
-    }
+    }*/
 }
